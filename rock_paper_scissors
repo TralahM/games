@@ -1,0 +1,72 @@
+#!/data/data/com.termux/files/usr/bin/env python
+
+from random import shuffle, choice
+import sys
+
+outcomes=['rock','paper','scissors']
+R,P,S=outcomes[0],outcomes[1],outcomes[2]
+
+def winner(c,h):
+    if c==h:
+        #print("Its a Tie!")
+        return 0
+    else:
+        if c==R:
+            if h==P:
+                #print("You Win!")
+                return 1
+            else:
+                #print("You Lose!")
+                return -1
+        elif c==P:
+            if h==S:
+                #print("You Win!")
+                return 1
+            else:
+                #print("You Lose!")
+                return -1
+        elif c==S:
+            if h==R:
+                #print("You Win!")
+                return 1
+            else:
+                #print("You Lose!")
+                return -1
+def simulate(opt,n=21):
+    shuffle(outcomes)
+    res=[winner(choice(outcomes),opt) for i in range(n)]
+    return res
+def stats(res):
+    wins=res.count(1)
+    losses=res.count(-1)
+    ties=res.count(0)
+    n=len(res)
+    mean=sum(res)/n
+    print('%d wins of %d'%(wins,n))
+    print('%d ties of %d'%(ties,n))
+    print('%d losses of %d'%(losses,n))
+    print('%.1f percent wins,\t,%.1f percent ties,\t,%.1f percent losses'%(100*wins/n,100*ties/n,100*losses/n))
+    print("\n\t\033[92m Average: %.7f \033[0m "%mean)
+    if mean==0:
+        print("No Profit!")
+    elif mean>0:
+        print("You Profit!")
+    else:
+        print("You Lose!")
+if __name__=='__main__':
+    if len(sys.argv)<3:
+        print("Usage:\n\t./rock_paper_scissors [R|P|S] N\nWhere R -Rock\t P -Paper\t S  -Scissors\n\t and N - Number of Iterations of Play.\n")
+        sys.exit(0)
+    shuffle(outcomes)
+    comp=choice(outcomes)
+    if sys.argv[1]=='R':
+        hum=R
+    elif sys.argv[1]=='P':
+        hum=P
+    elif sys.argv[1]=='S':
+        hum=S
+    else:
+        hum=R
+    n=int(sys.argv[2])
+    res=simulate(hum,n)
+    stats(res)
